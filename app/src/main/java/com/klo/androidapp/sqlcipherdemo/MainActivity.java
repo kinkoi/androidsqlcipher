@@ -8,7 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import java.io.File;
+import net.sqlcipher.database.SQLiteDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        InitializeSQLCipher();
 
     }
 
@@ -52,5 +54,14 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    private void InitializeSQLCipher() {
+        SQLiteDatabase.loadLibs(this);
+        File databaseFile = getDatabasePath("demo.db");
+        databaseFile.mkdirs();
+        databaseFile.delete();
+        SQLiteDatabase database = SQLiteDatabase.openOrCreateDatabase(databaseFile, "test123", null);
+        database.execSQL("create table t1(a, b)");
+        database.execSQL("insert into t1(a, b) values(?, ?)", new Object[]{"one for the money",
+                "two for the show"});
+    }
 }
